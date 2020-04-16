@@ -1,8 +1,14 @@
 FROM heroku/heroku:18-build
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y \
-  libheif-dev
+RUN printf "deb http://archive.ubuntu.com/ubuntu/ bionic main restricted\ndeb-src http://archive.ubuntu.com/ubuntu/ bionic main restricted\n \
+deb http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted\ndeb-src http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted\n \
+deb http://archive.ubuntu.com/ubuntu/ bionic universe\ndeb-src http://archive.ubuntu.com/ubuntu/ bionic universe\n \
+deb http://archive.ubuntu.com/ubuntu/ bionic-updates universe\ndeb-src http://archive.ubuntu.com/ubuntu/ bionic-updates universe" > /etc/apt/sources.list
+
+RUN apt-get update
+RUN apt-get install -y build-essential autoconf libtool git-core
+RUN apt-get build-dep -y imagemagick libmagickcore-dev libde265 libheif
 
 RUN curl -L https://github.com/strukturag/libde265/releases/download/v1.0.5/libde265-1.0.5.tar.gz | tar zx \
   && cd libde265-1.0.5 \
